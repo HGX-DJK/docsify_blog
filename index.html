@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>个人开发笔记杂记</title>
+  <link rel="icon" href="images/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+  <link rel="stylesheet" href="plugin/css/vue.css">
+  <!-- 支持 LaTex 语言 -->
+  <link rel="stylesheet" href="plugin/css/katex.min.css" />
+  <link rel="stylesheet" href="https://wugenqiang.js.org/src/css/iconfont.css">
+  <!-- alert -->
+  <link rel="stylesheet" href="plugin/css/sweetalert.min.css" type='text/css' media='all' />
+
+  <!-- 自定义特色样式：by myself -->
+  <link rel="stylesheet" href="plugin/css/selfStyle.css">
+
+</head>
+
+<body>
+  <div id="app">🏃‍🏃‍🏃‍💨 加载中...</div>
+  
+  <script>
+    window.$docsify = {
+      name: "<p>🤹‍♂️ HGX' NoteBook</p>",
+      nameLink: '',
+      themeColor: '#007be8',         // 主题颜色
+      //loadSidebar: true,           //_sidebar.md如果为真，则从_sidebar.md文件加载边栏，否则从指定的路径加载
+      auto2top: true,                //当路线改变时,滚动到屏幕的顶部
+      loadNavbar: true,              //_navbar.md如果为真，则从_navbar.md文件加载navbar ，否则从指定的路径加载
+      mergeNavbar: true,             //Navbar将在小屏幕上与侧边栏合并
+      executeScript: true,           //执行页面上的脚本。只解析第一个脚本标记（演示）。如果存在Vue，则默认开
+      maxLevel: 6,                   //最大的内容表级别
+      externalLinkTarget: '_blank',  //外链打开方式：_blank表示在新标签页中打开
+      coverpage: true,
+      onlyCover: true,
+      topMargin: 60,                  //调整top
+      //添加搜索框
+      search: {
+        paths: 'auto',
+        placeholder: '🔍 搜索',
+        noData: '😒 找不到结果',
+        depth: 6,
+        maxAge: 86400000, // 过期时间，单位毫秒，默认一天
+      },
+
+      markdown: {
+        renderer: {
+          code: function (code, lang, base = null) {
+            if (lang === "dot") {
+              return (
+                '<div class="viz">' + Viz(code, "SVG") + '</div>'
+              );
+            }
+            var pdf_renderer = function (code, lang, verify) {
+              function unique_id_generator() {
+                function rand_gen() {
+                  return Math.floor((Math.random() + 1) * 65536).toString(16).substring(1);
+                }
+                return rand_gen() + rand_gen() + '-' + rand_gen() + '-' + rand_gen() + '-' + rand_gen() + '-' + rand_gen() + rand_gen() + rand_gen();
+              }
+              if (lang && !lang.localeCompare('pdf', 'en', { sensitivity: 'base' })) {
+                if (verify) {
+                  return true;
+                } else {
+                  var divId = "markdown_code_pdf_container_" + unique_id_generator().toString();
+                  var container_list = new Array();
+                  if (localStorage.getItem('pdf_container_list')) {
+                    container_list = JSON.parse(localStorage.getItem('pdf_container_list'));
+                  }
+                  container_list.push({ "pdf_location": code, "div_id": divId });
+                  localStorage.setItem('pdf_container_list', JSON.stringify(container_list));
+                  return (
+                    '<div style="margin-top:' + PDF_MARGIN_TOP + '; margin-bottom:' + PDF_MARGIN_BOTTOM + ';" id="' + divId + '">'
+                    + '<a href="' + code + '"> Link </a> to ' + code +
+                    '</div>'
+                  );
+                }
+              }
+              return false;
+            }
+            if (pdf_renderer(code, lang, true)) {
+              return pdf_renderer(code, lang, false);
+            }
+            return (base ? base : this.origin.code.apply(this, arguments));
+          }
+        }
+      },
+
+    }
+  </script>
+
+  <!--docsify及搜索js-->
+  <script src="plugin/js/docsify.min.js"></script>
+  <script src="plugin/js/search.min.js"></script>
+  <script src="plugin/js/zoom-image.min.js"></script>
+
+  <!-- 支持 DOT 语言 -->
+  <script src="plugin/js/viz.js"></script>
+  <!-- 支持 LaTex 语言 -->
+  <script src="plugin/js/docsify-katex.js"></script>
+
+  <!-- 添加 PDF 页面展示功能 -->
+  <script src="plugin/js/pdfobject.min.js"></script>
+  <script src="plugin/js/docsify-pdf-embed.js"></script>
+
+  <!-- 复制代码-->
+  <script src="plugin/js/docsify-copy-code.min.js"></script>
+
+  <!-- 回到顶部功能 -->
+  <script src="plugin/js/jquery.js"></script>
+  <script src="plugin/js/jquery.goup.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $.goup({
+        trigger: 100,
+        bottomOffset: 52,
+        locationOffset: 25,
+        titleAsText: true
+      });
+    });
+  </script>
+
+
+  <!-- mouse click -->
+  <script src="plugin/js/click_heart.js"></script>
+  <!-- 复制提醒 -->
+  <script src="plugin/js/sweetalert.min.js"></script>
+  <script>
+    document.body.oncopy = function () {
+      swal("复制成功 🎉",
+        "若要转载或引用请务必保留原文链接，并申明来源。如果你觉得本仓库不错，那就来 GitHub 给个 Star 吧 😊   - by ",
+        "success");
+    };
+  </script>
+
+
+</body>
+
+</html>
